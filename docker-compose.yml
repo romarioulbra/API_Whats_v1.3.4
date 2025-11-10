@@ -1,0 +1,143 @@
+# version: '3.8'
+
+# networks:
+#   public-network:
+#     driver: bridge
+
+# services:
+#   db:
+#     image: postgres:15
+#     container_name: codechat_postgres
+#     restart: unless-stopped
+#     networks:
+#       - public-network
+#     environment:
+#       POSTGRES_DB: codechat
+#       POSTGRES_USER: postgres
+#       POSTGRES_PASSWORD: postgres
+#     ports:
+#       - 5432:5432
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data
+
+#   api:
+#     container_name: codechat_api
+#     image: codechat/api:v1.3.4
+    
+#     command: sh -c "npx prisma migrate deploy && node ./dist/src/main.js"
+
+#     restart: unless-stopped
+#     depends_on:
+#       - db
+#     networks:
+#       - public-network
+#     ports:
+#       - 8084:8084
+#     volumes:
+#       - instances_connecteds:/codechat/instances
+#       - ./prisma:/codechat/prisma        # ← ADICIONAR ESTA LINHA
+#     environment:
+#       SERVER_PORT: 8084
+#       SESSION_SECRET: W0NvZGVDaGF0XTpbU2Vzc
+#       LOG_LEVEL: INFO
+#       LOG_COLOR: "true"
+
+#       DATABASE_ENABLED: "true"
+#       DATABASE_URL: postgresql://postgres:postgres@db:5432/codechat?schema=public
+#       DATABASE_SYNC_MESSAGES: "true"
+#       DATABASE_SAVE_DATA_NEW_MESSAGE: "true"
+#       DATABASE_SAVE_MESSAGE_UPDATE: "true"
+#       DATABASE_SAVE_DATA_CONTACTS: "true"
+#       DATABASE_SAVE_DATA_CHATS: "true"
+
+#       INSTANCE_EXPIRATION_TIME: "false"
+
+#       CONFIG_SESSION_PHONE_CLIENT: CodeChat_V1
+#       CONFIG_SESSION_PHONE_NAME: Edge
+
+#       WA_VERSION: "[2,3000,1023235404]"
+
+#       QRCODE_LIMIT: 10
+#       QRCODE_EXPIRATION_TIME: 60
+
+#       CONNECTION_TIMEOUT: 300
+
+#       AUTHENTICATION_GLOBAL_AUTH_TOKEN: zYzP7ocstxh3SJ23D4FZTCu4ehnM8v4hu
+
+# volumes:
+#   postgres_data:
+#   instances_connecteds:
+
+
+version: '3.8'
+
+networks:
+  public-network:
+    driver: bridge
+
+services:
+  db:
+    image: postgres:15
+    container_name: codechat_postgres
+    restart: unless-stopped
+    networks:
+      - public-network
+    environment:
+      POSTGRES_DB: codechat
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    container_name: codechat_api
+    image: codechat/api:v1.3.4
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - public-network
+    ports:
+      - 8084:8084
+    volumes:
+      - instances_connecteds:/codechat/instances
+    command: sh -c "npx prisma migrate deploy && node ./dist/src/main.js"
+    environment:
+      SERVER_PORT: 8084
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/codechat?schema=public
+      SESSION_SECRET: W0NvZGVDaGF0XTpbU2Vzc
+      LOG_LEVEL: INFO
+      LOG_COLOR: "true"
+
+      DATABASE_ENABLED: "true"
+      DATABASE_SYNC_MESSAGES: "true"
+      DATABASE_SAVE_DATA_NEW_MESSAGE: "true"
+      DATABASE_SAVE_MESSAGE_UPDATE: "true"
+      DATABASE_SAVE_DATA_CONTACTS: "true"
+      DATABASE_SAVE_DATA_CHATS: "true"
+
+      INSTANCE_EXPIRATION_TIME: "false"
+
+      CONFIG_SESSION_PHONE_CLIENT: CodeChat_V1
+      CONFIG_SESSION_PHONE_NAME: Edge
+
+      WA_VERSION: "[2,3000,1023235404]"
+
+      QRCODE_LIMIT: 10
+      QRCODE_EXPIRATION_TIME: 60
+
+      CONNECTION_TIMEOUT: 300
+
+      AUTHENTICATION_GLOBAL_AUTH_TOKEN: zYzP7ocstxh3SJ23D4FZTCu4ehnM8v4hu
+
+volumes:
+  postgres_data:
+  instances_connecteds:
