@@ -1,4 +1,160 @@
-version: '3.8'
+# version: '3.8'
+
+# networks:
+#   public-network:
+#     driver: bridge
+
+# services:
+#   db:
+#     image: postgres:15
+#     container_name: codechat_postgres
+#     restart: unless-stopped
+#     networks:
+#       - public-network
+#     environment:
+#       POSTGRES_DB: codechat
+#       POSTGRES_USER: postgres
+#       POSTGRES_PASSWORD: postgres
+#     ports:
+#       - 5432:5432
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data
+#     healthcheck:
+#       test: ["CMD-SHELL", "pg_isready -U postgres"]
+#       interval: 5s
+#       timeout: 5s
+#       retries: 10
+
+#   api:
+#     container_name: codechat_api
+#     # image: codechat/api:v1.3.4
+#     image: codechat/api:v1.3.0
+#     restart: unless-stopped
+#     depends_on:
+#       db:
+#         condition: service_healthy
+#     networks:
+#       - public-network
+#     ports:
+#       - 8084:8084
+#     volumes:
+#       - instances_connecteds:/codechat/instances
+#     command: sh -c "npx prisma migrate deploy && node ./dist/src/main.js"
+#     environment:
+#       SERVER_PORT: 8084
+#       DATABASE_URL: postgresql://postgres:postgres@db:5432/codechat?schema=public
+#       SESSION_SECRET: W0NvZGVDaGF0XTpbU2Vzc
+#       LOG_LEVEL: INFO
+#       LOG_COLOR: "true"
+
+#       DATABASE_ENABLED: "true"
+#       DATABASE_SYNC_MESSAGES: "true"
+#       DATABASE_SAVE_DATA_NEW_MESSAGE: "true"
+#       DATABASE_SAVE_MESSAGE_UPDATE: "true"
+#       DATABASE_SAVE_DATA_CONTACTS: "true"
+#       DATABASE_SAVE_DATA_CHATS: "true"
+
+#       INSTANCE_EXPIRATION_TIME: "false"
+
+#       # Configurações do WhatsApp - ATUALIZADAS
+#       CONFIG_SESSION_PHONE_CLIENT: Chrome Linux
+#       CONFIG_SESSION_PHONE_NAME: Chrome
+#       WA_VERSION: "[2,3000,1024242101]"  # Versão mais recente
+  
+#       # Configurações de timeout aumentadas
+#       QRCODE_LIMIT: 30
+#       QRCODE_EXPIRATION_TIME: 180
+#       CONNECTION_TIMEOUT: 600
+
+#        # OTIMIZAÇÕES DE MEMÓRIA
+#       NODE_OPTIONS: "--max-old-space-size=1024"
+  
+#       AUTHENTICATION_GLOBAL_AUTH_TOKEN: zYzP7ocstxh3SJ23D4FZTCu4ehnM8v4hu
+
+# volumes:
+#   postgres_data:
+#   instances_connecteds:
+
+
+# version: '3.8'
+
+# networks:
+#   public-network:
+#     driver: bridge
+
+# services:
+#   db:
+#     image: postgres:15
+#     container_name: codechat_postgres
+#     restart: unless-stopped
+#     networks:
+#       - public-network
+#     environment:
+#       POSTGRES_DB: codechat
+#       POSTGRES_USER: postgres
+#       POSTGRES_PASSWORD: postgres
+#     ports:
+#       - 5432:5432
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data
+#     healthcheck:
+#       test: ["CMD-SHELL", "pg_isready -U postgres"]
+#       interval: 5s
+#       timeout: 5s
+#       retries: 10
+
+#   api:
+#     container_name: codechat_api
+#     image: codechat/api:v1.3.0
+#     restart: unless-stopped
+#     depends_on:
+#       db:
+#         condition: service_healthy
+#     networks:
+#       - public-network
+#     ports:
+#       - 8084:8084
+#     volumes:
+#       - instances_connecteds:/codechat/instances
+#     command: sh -c "npx prisma migrate deploy && node ./dist/src/main.js"
+#     environment:
+#       SERVER_PORT: 8084
+#       DATABASE_URL: postgresql://postgres:postgres@db:5432/codechat?schema=public
+#       SESSION_SECRET: W0NvZGVDaGF0XTpbU2Vzc
+#       LOG_LEVEL: INFO
+#       LOG_COLOR: "true"
+#       DATABASE_ENABLED: "true"
+#       DATABASE_SYNC_MESSAGES: "true"
+#       DATABASE_SAVE_DATA_NEW_MESSAGE: "true"
+#       DATABASE_SAVE_MESSAGE_UPDATE: "true"
+#       DATABASE_SAVE_DATA_CONTACTS: "true"
+#       DATABASE_SAVE_DATA_CHATS: "true"
+#       INSTANCE_EXPIRATION_TIME: "false"
+#       CONFIG_SESSION_PHONE_CLIENT: Chrome Linux
+#       CONFIG_SESSION_PHONE_NAME: Chrome
+#       WA_VERSION: "[2,3000,1024242101]"
+#       QRCODE_LIMIT: 30
+#       QRCODE_EXPIRATION_TIME: 180
+#       CONNECTION_TIMEOUT: 600
+#       NODE_OPTIONS: "--max-old-space-size=1024"
+#       AUTHENTICATION_GLOBAL_AUTH_TOKEN: zYzP7ocstxh3SJ23D4FZTCu4ehnM8v4hu
+
+#   ngrok:
+#     image: wernight/ngrok
+#     container_name: codechat_ngrok
+#     restart: unless-stopped
+#     networks:
+#       - public-network
+#     depends_on:
+#       - api
+#     environment:
+#       NGROK_AUTHTOKEN: 34puoPC8kXY815fWdyb8ii45zre_4SASoR1uxU9mBG7JqFV9p
+#     command: ngrok http api:8084
+#     # ↑ O comando correto é "ngrok http <serviço>:porta"
+
+# volumes:
+#   postgres_data:
+#   instances_connecteds:
 
 networks:
   public-network:
@@ -16,7 +172,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -27,7 +183,6 @@ services:
 
   api:
     container_name: codechat_api
-    # image: codechat/api:v1.3.4
     image: codechat/api:v1.3.0
     restart: unless-stopped
     depends_on:
@@ -36,7 +191,7 @@ services:
     networks:
       - public-network
     ports:
-      - 8084:8084
+      - "8084:8084"
     volumes:
       - instances_connecteds:/codechat/instances
     command: sh -c "npx prisma migrate deploy && node ./dist/src/main.js"
@@ -46,30 +201,84 @@ services:
       SESSION_SECRET: W0NvZGVDaGF0XTpbU2Vzc
       LOG_LEVEL: INFO
       LOG_COLOR: "true"
-
       DATABASE_ENABLED: "true"
       DATABASE_SYNC_MESSAGES: "true"
       DATABASE_SAVE_DATA_NEW_MESSAGE: "true"
       DATABASE_SAVE_MESSAGE_UPDATE: "true"
       DATABASE_SAVE_DATA_CONTACTS: "true"
       DATABASE_SAVE_DATA_CHATS: "true"
-
       INSTANCE_EXPIRATION_TIME: "false"
-
-      # Configurações do WhatsApp - ATUALIZADAS
       CONFIG_SESSION_PHONE_CLIENT: Chrome Linux
       CONFIG_SESSION_PHONE_NAME: Chrome
-      WA_VERSION: "[2,3000,1024242101]"  # Versão mais recente
-  
-      # Configurações de timeout aumentadas
+      WA_VERSION: "[2,3000,1024242101]"
       QRCODE_LIMIT: 30
       QRCODE_EXPIRATION_TIME: 180
       CONNECTION_TIMEOUT: 600
-
-       # OTIMIZAÇÕES DE MEMÓRIA
       NODE_OPTIONS: "--max-old-space-size=1024"
-  
       AUTHENTICATION_GLOBAL_AUTH_TOKEN: zYzP7ocstxh3SJ23D4FZTCu4ehnM8v4hu
+
+  # ngrok:
+  #   image: ngrok/ngrok:latest
+  #   container_name: codechat_ngrok
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - api
+  #   networks:
+  #     - public-network
+  #   # env_file:
+  #   #   - .env.dev
+  #   environment:
+  #     # 🔑 Token do ngrok (substitua pelo seu)
+  #     NGROK_AUTHTOKEN: 4puoPC8kXY815fWdyb8ii45zre_4SASoR1uxU9mBG7JqFV9p
+  #     NGROK_CONFIG: /etc/ngrok/ngrok.yml
+  #     NGROK_DEBUG: "true"
+  #   volumes:
+  #     # - ./env.dev:/app/.env.dev
+  #     - ./ngrok-url.txt:/app/ngrok-url.txt
+  #   working_dir: /app
+  #   command: >
+  #     sh -c "
+  #     echo '🟡 [DEBUG] Iniciando container ngrok...' &&
+  #     echo '🟡 [DEBUG] Verificando token:' $NGROK_AUTHTOKEN &&
+  #     if [ -z \"$NGROK_AUTHTOKEN\" ]; then
+  #       echo '🔴 [ERRO] NGROK_AUTHTOKEN não definido. Configure no docker-compose ou .env.dev';
+  #       sleep 3600;
+  #       exit 1;
+  #     fi;
+  #     echo '🟢 [OK] Token detectado, iniciando túnel...' &&
+  #     ngrok config add-authtoken $NGROK_AUTHTOKEN &&
+  #     ngrok http api:8084 --log=stdout > /tmp/ngrok.log 2>&1 &
+  #     echo '🟡 [DEBUG] Aguardando inicialização do ngrok...' &&
+  #     sleep 8 &&
+  #     echo '🟡 [DEBUG] Capturando URL pública...' &&
+  #     NGROK_URL=$(curl --silent --max-time 15 http://127.0.0.1:4040/api/tunnels | grep -o 'https://[a-zA-Z0-9.-]*\.ngrok.io' | head -n 1);
+  #     if [ -z \"$NGROK_URL\" ]; then
+  #       echo '🔴 [ERRO] Não foi possível obter a URL pública do ngrok!';
+  #       cat /tmp/ngrok.log || true;
+  #     else
+  #       echo '🟢 [OK] NGROK PUBLIC URL: ' $NGROK_URL;
+  #       echo $NGROK_URL > /app/ngrok-url.txt;
+  #     fi;
+  #     echo '🟢 [INFO] ngrok rodando — logs abaixo:' &&
+  #     tail -f /tmp/ngrok.log
+  #     "
+  #   ports:
+  #     - "4040:4040"  # painel web do ngrok
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: codechat_ngrok
+    restart: unless-stopped
+    depends_on:
+      - api
+    networks:
+      - public-network
+    environment:
+      NGROK_AUTHTOKEN: 4puoPC8kXY815fWdyb8ii45zre_4SASoR1uxU9mBG7JqFV9p
+    command: >
+      http api:8084 --log=stdout
+    ports:
+      - "4040:4040"
 
 volumes:
   postgres_data:
